@@ -1,8 +1,34 @@
 # React-native init scaffold
 
-## Replacement
+## Introduction
 
-### `tsconfig.json`
+A react-native project generator developed by `docker`. This scaffold generator makes your project usually latest.
+
+## Prerequirements
+
+You should make sure `docker` and `GNU Make` is installed in your computer.
+
+## Usage
+
+### Javascript
+
+For generating a react-native javascript project scaffold, just run
+
+```Bash
+$ make PROJ=YOUR_PROJ_NAME
+```
+
+### Typescript
+
+If you want to make a typescript react-native project, after the command `make PROJ=YOUR_PROJ_NAME` above, you should also run
+
+```bash
+$ make tsc
+```
+
+then you should do some file replacements described below:
+
+#### `tsconfig.json`
 
 ```Json
 {
@@ -13,11 +39,11 @@
 }
 ```
 
-### `package.json`
+#### `package.json`
 
 we'll open up our `package.json` and replace the `jest` field with the following:
 
-```
+```Json
 "jest": {
     "preset": "react-native",
     "moduleFileExtensions": [
@@ -41,30 +67,18 @@ we'll open up our `package.json` and replace the `jest` field with the following
 
 This will configure Jest to run `.ts` and `.tsx` files with `ts-jest`.
 
-### files in `./src`
+Then Add typescript scripts into `package.json`:
 
-the replacements include:
-
-- Replace `import React, {Component} from 'react';` with `import * as React from 'react';`
-- Replace old references to `Component` to `React.Component<object, object>`.
-
-That should fix things right up. Some of this has to do with differences in how Babel and TypeScript interoperate with CommonJS modules. In the future, the two will stabilize on the same behavior.
-
-Next, we'll move our tests over to TypeScript as well. Just change the extension of all files in `src/__tests__/` from `.js`to `.tsx` and apply the following fixes:
-
-- Replace `import React, {Component} from 'react';` with `import * as React from 'react';`
-- Replace `import renderer from 'react-test-renderer';` with `import * as renderer from 'react-test-renderer';`
-- Rewrite imports from `import Index from '../index.ios.js';` to `import Index from '../index.ios';`, and likewise for Android. In other words, drop the `.js` extension from your imports.
-
-First, run TypeScript on our source:
-
-```
-./node_modules/.bin/tsc
+```Json
+"scripts": {
+  "clean": "rm -rf lib",
+  "tsc:w": "tsc -w",
+  "tsc": "tsc",
+  ...
+},
 ```
 
-Now we can make sure our tests still run and that the app can still correctly deploy. If running on an emulator/device still works, and tests are still passing, you're all set to start building out with TypeScript! As a checkpoint, consider committing your files into version control.
-
-### `.gitignore`
+#### `.gitignore`
 
 For your source control, you'll want to start ignoring the `.jest` and `lib` folders. If you're using git, we can just add entries to our `.gitignore` file.
 
@@ -78,3 +92,14 @@ lib/
 .jest/
 ```
 
+#### files in `./src`
+
+##### `./src/App.tsx`
+
+- Replace `import React, {Component} from 'react';` with `import * as React from 'react';`
+- Replace old references to `Component` to `React.Component<object, object>`.
+
+##### `./src/__test__/App.tsx`
+
+- Replace `import React, {Component} from 'react';` with `import * as React from 'react';`
+- Replace `import renderer from 'react-test-renderer';` with `import * as renderer from 'react-test-renderer';`
